@@ -114,7 +114,7 @@ print(X.head())
 #y = df['diagnosis'].to_numpy()
 y = df['diagnosis']
 print(y.head())
-X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.20, random_state=10)
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.30, random_state=10)
 X.shape, X_train.shape, y_train.shape, X_test.shape, y_test.shape
 
 # from sklearn.preprocessing import StandardScaler
@@ -224,32 +224,237 @@ X_test.head()
 
 pred_lm = reg.predict(X_test)
 pred_bin_lm = pred_lm
-print(pred_bin_lm)
+#print(pred_bin_lm)
 
 
 np.place(pred_bin_lm, pred_bin_lm>=0.5, 1)
 np.place(pred_bin_lm, pred_bin_lm<0.5, 0)
-print(pred_bin_lm)
-
+#print(pred_bin_lm)
+pred_lm = pred_lm.astype(int)
 df_pred_lm = pd.DataFrame({'Predicted':pred_lm, 'Actual': y_test})
-df_pred_lm.head(10)
+df_pred_lm.head()
 
 from sklearn import metrics
 print("Mean absolute error: ", metrics.mean_absolute_error(y_test, pred_bin_lm))
-print("M")
+
+print("Accuracy:",metrics.accuracy_score(y_test, pred_lm))
+print("Precision:",metrics.precision_score(y_test, pred_lm))
+print("Recall:",metrics.recall_score(y_test, pred_lm))
 
 from sklearn.metrics import confusion_matrix
 labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
-
+ax= plt.subplot()
 confmat = confusion_matrix(y_test, pred_bin_lm)
-sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for Linear Regression')
 # x axis - predicted - 0:false ; 1:true
 # y axis - actual val- 0:negative ; 1:positive
 
 accuracy_lm = metrics.accuracy_score(y_test, pred_bin_lm)
 print("Accuracy of Linear Regression: ", round(accuracy_lm*100, 4), '%')
 
+from sklearn.linear_model import LogisticRegression
+logreg = LogisticRegression()
+logreg.fit(X_train,y_train)
+y_pred1=logreg.predict(X_test)
+
+df_logpred = pd.DataFrame({'Predictions': y_pred1, 'Actual': y_test})
+(df_logpred.head())
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred1))
+print("Precision:",metrics.precision_score(y_test, y_pred1))
+print("Recall:",metrics.recall_score(y_test, y_pred1))
+
+from sklearn.metrics import confusion_matrix
+labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
+ax= plt.subplot()
+confmat = confusion_matrix(y_test, y_pred1)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for Logistic Regression')
+# x axis - predicted - 0:false ; 1:true
+# y axis - actual val- 0:negative ; 1:positive
+
+print("Mean absolute error: ", metrics.mean_absolute_error(y_test, y_pred1))
+
+accuracy_logreg = metrics.accuracy_score(y_test,y_pred1)
+print("Accuracy of Logistic Regression: ", round(accuracy_logreg*100, 4), '%')
+
+from sklearn.tree import DecisionTreeRegressor 
+regressor = DecisionTreeRegressor(random_state = 0) 
+regressor.fit(X_train, y_train)
+y_pred2 = regressor.predict(X_test)
+
+y_pred2 = y_pred2.astype(int)
+df_decisTree = pd.DataFrame({'Predictions': y_pred2, 'Actual': y_test})
+(df_decisTree.head())
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred2))
+print("Precision:",metrics.precision_score(y_test, y_pred2))
+print("Recall:",metrics.recall_score(y_test, y_pred2))
+
+accuracy_dectree = metrics.accuracy_score(y_test,y_pred2)
+print("Accuracy of Decision Tree Regression: ", round(accuracy_dectree*100, 4), '%')
+
+from sklearn.metrics import confusion_matrix
+labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
+ax= plt.subplot()
+confmat = confusion_matrix(y_test, y_pred2)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for Decision Tree Regression')
+# x axis - predicted - 0:false ; 1:true
+# y axis - actual val- 0:negative ; 1:positive
+
+from sklearn.ensemble import RandomForestClassifier
+rfc = RandomForestClassifier(n_estimators = 100)
+rfc.fit(X_train, y_train)
+y_pred3 = rfc.predict(X_test)
+
+y_pred3 = y_pred3.astype(int)
+df_randtree = pd.DataFrame({'Predictions': y_pred3, 'Actual': y_test})
+(df_randtree.head())
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred3))
+print("Precision:",metrics.precision_score(y_test, y_pred3))
+print("Recall:",metrics.recall_score(y_test, y_pred3))
+
+accuracy_randtree = metrics.accuracy_score(y_test,y_pred3)
+print("Accuracy of Random Forest Classifier: ", round(accuracy_randtree*100, 4), '%')
+
+from sklearn.metrics import confusion_matrix
+labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
+ax= plt.subplot()
+confmat = confusion_matrix(y_test, y_pred3)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for Random Tree Classifier')
+# x axis - predicted - 0:false ; 1:true
+# y axis - actual val- 0:negative ; 1:positive
+
+df_totacc = pd.DataFrame({'Model':['Linear Regression', 'Logistic Regression', 'Decision Tree Regression', 'Random Forest Classification' ], 'Accuracy': [accuracy_lm, accuracy_logreg, accuracy_dectree, accuracy_randtree]})
+df_totacc.sort_values('Accuracy')
+
+from sklearn.naive_bayes import GaussianNB
+nb = GaussianNB()
+nb.fit(X_train, y_train)
+y_pred4 = nb.predict(X_test)
+
+y_pred4 = y_pred4.astype(int)
+df_bayes = pd.DataFrame({'Predictions': y_pred4, 'Actual': y_test})
+(df_bayes.head())
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred4))
+print("Precision:",metrics.precision_score(y_test, y_pred4))
+print("Recall:",metrics.recall_score(y_test, y_pred4))
+
+accuracy_naiive = metrics.accuracy_score(y_test,y_pred4)
+print("Accuracy of Naiive Bayes Classifier: ", round(accuracy_naiive*100, 4), '%')
+
+from sklearn.metrics import confusion_matrix
+labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
+ax= plt.subplot()
+confmat = confusion_matrix(y_test, y_pred4)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for Naiive Bayes Classifier')
+# x axis - predicted - 0:false ; 1:true
+# y axis - actual val- 0:negative ; 1:positive
+
+dict1 = {'Model': 'Naiive Bayes Classifier', 'Accuracy': accuracy_naiive}
+df_totacc = df_totacc.append(dict1, ignore_index=True)
+
+df_totacc.sort_values('Accuracy')
+
+from sklearn.svm import SVC 
+svm = SVC(kernel='linear')
+svm.fit(X_train, y_train)
+y_pred5 = svm.predict(X_test)
+
+y_pred5 = y_pred5.astype(int)
+df_svm = pd.DataFrame({'Predictions': y_pred5, 'Actual': y_test})
+(df_svm.head())
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred5))
+print("Precision:",metrics.precision_score(y_test, y_pred5))
+print("Recall:",metrics.recall_score(y_test, y_pred5))
 
 
+accuracy_svm = metrics.accuracy_score(y_test,y_pred5)
+print("Accuracy of Support Vector Machine Classifier: ", round(accuracy_svm*100, 4), '%')
 
+from sklearn.metrics import confusion_matrix
+labels = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
+ax= plt.subplot()
+confmat = confusion_matrix(y_test, y_pred5)
+sns.heatmap(confmat, square = True, annot = True , cmap = 'Greens', fmt = 'd', cbar = True, ax=ax)
+ax.set_xlabel('Predicted labels')
+ax.set_ylabel('True labels')
+ax.set_title('Confusion Matrix for SVM Classifier')
+# x axis - predicted - 0:false ; 1:true
+# y axis - actual val- 0:negative ; 1:positive
+
+dict2 = {'Model': 'Support Vector Machine Classifier', 'Accuracy': accuracy_svm}
+df_totacc = df_totacc.append(dict2, ignore_index=True)
+#df_totacc.sort_values('Accuracy')
+df_totacc
+
+df_totacc.sort_values('Accuracy')
+
+from sklearn.neighbors import KNeighborsClassifier
+
+neighbors = np.arange(1,100)
+train_accuracy = np.empty(len(neighbors))
+test_accuracy = np.empty(len(neighbors))
+for i, k in enumerate(neighbors):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+  
+    train_accuracy[i] = knn.score(X_train, y_train)
+    test_accuracy[i] = knn.score(X_test, y_test)
+
+plt.plot(train_accuracy, label='train accuracy')
+plt.plot(test_accuracy, label = 'test accuracy')
+plt.show()
+
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X_train, y_train)
+y_pred6 = knn.predict(X_test)
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred6))
+print("Precision:",metrics.precision_score(y_test, y_pred6))
+print("Recall:",metrics.recall_score(y_test, y_pred6))
+
+
+accuracy_knn = metrics.accuracy_score(y_test,y_pred6)
+print("Accuracy of K-Nearest Neighbours Classifier: ", round(accuracy_knn*100, 4), '%')
+
+dict3 = {'Model': 'K-Nearest Neighbours', 'Accuracy': accuracy_knn}
+df_totacc = df_totacc.append(dict3, ignore_index=True)
+df_totacc
+
+from sklearn.linear_model import SGDClassifier
+sgd = SGDClassifier(loss='hinge', penalty='l2', max_iter=5)
+sgd.fit(X_train, y_train)
+y_pred7 = sgd.predict(X_test)
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred7))
+print("Precision:",metrics.precision_score(y_test, y_pred7))
+print("Recall:",metrics.recall_score(y_test, y_pred7))
+
+
+accuracy_sgd = metrics.accuracy_score(y_test,y_pred7)
+print("Accuracy of Stochastic Gradient Descent: ", round(accuracy_sgd*100, 4), '%')
+
+dict4 = {'Model': 'Stochastic Gradient Descent', 'Accuracy': accuracy_sgd}
+df_totacc = df_totacc.append(dict4, ignore_index=True)
+df_totacc
+
+df_totacc.sort_values('Accuracy')
 
