@@ -117,99 +117,27 @@ print(y.head())
 X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.30, random_state=10)
 X.shape, X_train.shape, y_train.shape, X_test.shape, y_test.shape
 
-# from sklearn.preprocessing import StandardScaler
-# scaler = StandardScaler()
-# Xstd = scaler.fit_transform(X)
-# Xstd
+"""from here
+
+"""
 
 
 
-df
 
-# #principal component analysis
-# from sklearn.decomposition import PCA
-# pca = PCA(n_components = 10)
-# fitp = pca.fit(Xstd)
-# print(Xstd)
-# Xpca = pca.transform(Xstd)
 
-# df_pca = pd.DataFrame()
-# df_pca['radius_mean'] = Xpca[:,0]
-# df_pca['texture_mean'] = Xpca[:,1]
-# df_pca.head()
-# plt.plot(df_pca['radius_mean'][df.diagnosis == 'M'], df_pca['texture_mean'][df.diagnosis == 'M'], 'o', color = 'r')
-# plt.plot(df_pca['radius_mean'][df.diagnosis == 'B'], df_pca['texture_mean'][df.diagnosis == 'B'], 'o', color = 'b')
-# plt.show()
 
-from sklearn.preprocessing import StandardScaler
-sc = StandardScaler()
-X = sc.fit_transform(X)
 
-from sklearn.decomposition import PCA
 
-pca_t = PCA(n_components = 30)
-pca_t.fit_transform(X)
 
-explained_variance = pca_t.explained_variance_ratio_
 
-print(explained_variance)
 
-plt.plot(explained_variance)
-plt.ylabel("Eigen Values")
-plt.xlabel("Number of Components")
-plt.legend(['Eigan Values from Principal Component Analysis'])
-plt.show()
 
-new_pca_com = 5
-pca = PCA(n_components = new_pca_com)
-principalcomps = pca.fit_transform(X)
 
-df_pca = pd.DataFrame(data = principalcomps, columns = ['PC1', 'PC2', 'PC3', 'PC4', 'PC5'])
-df_pca1 = pd.concat([df_pca, df[['diagnosis']]], axis = 1)
-df_pca1.head()
 
-print('Explained variation per principal component = ', pca.explained_variance_ratio_)
-print('Information loss due to PCA: ', ((1-np.sum(pca.explained_variance_ratio_))*100), '%')
 
-fig = plt.figure(figsize = (5,5))
-ax= fig.add_subplot(1,1,1)
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC2')
-ax.set_title('P1 and P2 of 5 Components')
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC2'][df_pca1['diagnosis']==0],c='g', s = 50)
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC2'][df_pca1['diagnosis']==1],c='r', s = 50)
-ax.legend(['Benign','Malignant'])
-ax.grid()
 
-fig = plt.figure(figsize = (5,5))
-ax= fig.add_subplot(1,1,1)
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC4')
-ax.set_title('P1 and P4 of 5 Components')
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC4'][df_pca1['diagnosis']==0],c='g', s = 50)
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC4'][df_pca1['diagnosis']==1],c='r', s = 50)
-ax.legend(['Benign','Malignant'])
-ax.grid()
 
-fig = plt.figure(figsize = (5,5))
-ax= fig.add_subplot(1,1,1)
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC3')
-ax.set_title('P1 and P3 of 5 Components')
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC3'][df_pca1['diagnosis']==0],c='g', s = 50)
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC3'][df_pca1['diagnosis']==1],c='r', s = 50)
-ax.legend(['Benign','Malignant'])
-ax.grid()
-
-fig = plt.figure(figsize = (5,5))
-ax= fig.add_subplot(1,1,1)
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC5')
-ax.set_title('P1 and P5 of 5 Components')
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC5'][df_pca1['diagnosis']==0],c='g', s = 30)
-ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC5'][df_pca1['diagnosis']==1],c='r', s = 30)
-ax.legend(['Benign','Malignant'])
-ax.grid()
+"""to here"""
 
 #svm
 #decision tree
@@ -408,7 +336,6 @@ df_totacc
 df_totacc.sort_values('Accuracy')
 
 from sklearn.neighbors import KNeighborsClassifier
-
 neighbors = np.arange(1,100)
 train_accuracy = np.empty(len(neighbors))
 test_accuracy = np.empty(len(neighbors))
@@ -421,6 +348,7 @@ for i, k in enumerate(neighbors):
 
 plt.plot(train_accuracy, label='train accuracy')
 plt.plot(test_accuracy, label = 'test accuracy')
+plt.legend()
 plt.show()
 
 knn = KNeighborsClassifier(n_neighbors=1)
@@ -440,7 +368,9 @@ df_totacc = df_totacc.append(dict3, ignore_index=True)
 df_totacc
 
 from sklearn.linear_model import SGDClassifier
-sgd = SGDClassifier(loss='hinge', penalty='l2', max_iter=5)
+sgd = SGDClassifier(loss='hinge', penalty='l2', max_iter=1000)
+#hinge - loss function that gives linear SVM
+#l2 -> regularlization term used in model (prevents overfitting)
 sgd.fit(X_train, y_train)
 y_pred7 = sgd.predict(X_test)
 
@@ -456,5 +386,242 @@ dict4 = {'Model': 'Stochastic Gradient Descent', 'Accuracy': accuracy_sgd}
 df_totacc = df_totacc.append(dict4, ignore_index=True)
 df_totacc
 
+#df_totacc = df_totacc.drop([7])
+
 df_totacc.sort_values('Accuracy')
+
+"""start here"""
+
+from sklearn.model_selection import train_test_split
+# to find df['diagnosis'] and to use all other attr to predict diagnosis
+df_ref = df
+#df.head()
+df_ref.head()
+df_ref = df_ref.drop(columns = ['id', 'diagnosis'])
+X = df_ref
+print(X.head())
+#df_ref.head()
+#X = df.to_numpy()
+#y = df['diagnosis'].to_numpy()
+y = df['diagnosis']
+print(y.head())
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.30, random_state=10)
+X.shape, X_train.shape, y_train.shape, X_test.shape, y_test.shape
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X = sc.fit_transform(X)
+from sklearn.decomposition import PCA
+
+pca_t = PCA(n_components = 30)
+pca_t.fit_transform(X)
+
+explained_variance = pca_t.explained_variance_ratio_
+
+print(explained_variance)
+
+plt.plot(explained_variance)
+plt.ylabel("Eigen Values")
+plt.xlabel("Number of Components")
+plt.legend(['Eigan Values from Principal Component Analysis'])
+plt.show()
+
+new_pca_com = 5
+pca = PCA(n_components = new_pca_com)
+principalcomps = pca.fit_transform(X)
+
+df_pca = pd.DataFrame(data = principalcomps, columns = ['PC1', 'PC2', 'PC3', 'PC4', 'PC5'])
+df_pca1 = pd.concat([df_pca, df[['diagnosis']]], axis = 1)
+df_pca1.head()
+
+print(np.cov(principalcomps.T))
+print("**")
+#actual eigen values
+print(pca.explained_variance_)
+
+
+print('Explained variation per principal component = ', pca.explained_variance_ratio_)
+print('Information loss due to PCA: ', ((1-np.sum(pca.explained_variance_ratio_))*100), '%')
+
+fig = plt.figure(figsize = (5,5))
+ax= fig.add_subplot(1,1,1)
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+ax.set_title('P1 and P2 of 5 Components')
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC2'][df_pca1['diagnosis']==0],c='g', s = 50)
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC2'][df_pca1['diagnosis']==1],c='r', s = 50)
+ax.legend(['Benign','Malignant'])
+ax.grid()
+
+fig = plt.figure(figsize = (5,5))
+ax= fig.add_subplot(1,1,1)
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC4')
+ax.set_title('P1 and P4 of 5 Components')
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC4'][df_pca1['diagnosis']==0],c='g', s = 50)
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC4'][df_pca1['diagnosis']==1],c='r', s = 50)
+ax.legend(['Benign','Malignant'])
+ax.grid()
+
+fig = plt.figure(figsize = (5,5))
+ax= fig.add_subplot(1,1,1)
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC3')
+ax.set_title('P1 and P3 of 5 Components')
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC3'][df_pca1['diagnosis']==0],c='g', s = 50)
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC3'][df_pca1['diagnosis']==1],c='r', s = 50)
+ax.legend(['Benign','Malignant'])
+ax.grid()
+
+fig = plt.figure(figsize = (5,5))
+ax= fig.add_subplot(1,1,1)
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC5')
+ax.set_title('P1 and P5 of 5 Components')
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==0], df_pca1['PC5'][df_pca1['diagnosis']==0],c='g', s = 30)
+ax.scatter(df_pca1['PC1'][df_pca1['diagnosis']==1], df_pca1['PC5'][df_pca1['diagnosis']==1],c='r', s = 30)
+ax.legend(['Benign','Malignant'])
+ax.grid()
+
+
+
+
+
+
+
+df_pca
+
+from sklearn.model_selection import train_test_split
+X = df_pca
+y = df['diagnosis']
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.30, random_state=10)
+X.shape, X_train.shape, y_train.shape, X_test.shape, y_test.shape
+
+# old test train shapes -> ((569, 30), (398, 30), (398,), (171, 30), (171,))
+
+from sklearn.linear_model import LogisticRegression
+logreg = LogisticRegression()
+logreg.fit(X_train,y_train)
+y_pred1=logreg.predict(X_test)
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred1))
+print("Precision:",metrics.precision_score(y_test, y_pred1))
+print("Recall:",metrics.recall_score(y_test, y_pred1))
+
+# original data frame -> PCA -> use the different models -> 
+# compare with before_PCA.csv -> optimize
+
+dict1 =  {'Model': 'Logistic Regression', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = pd.DataFrame()
+dfppca = dfppca.append(dict1, ignore_index = True)
+#df_totacc = df_totacc.append(dict4, ignore_index=True)
+dfppca.head()
+
+
+
+df_totacc
+
+from sklearn.ensemble import RandomForestClassifier
+rfc = RandomForestClassifier(n_estimators = 100)
+rfc.fit(X_train, y_train)
+y_pred1 = rfc.predict(X_test)
+
+dict1 =  {'Model': 'Random Forest Classifier', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+#dfppca = pd.DataFrame()
+dfppca = dfppca.append(dict1, ignore_index = True)
+#df_totacc = df_totacc.append(dict4, ignore_index=True)
+dfppca.head()
+
+from sklearn.linear_model import SGDClassifier
+sgd = SGDClassifier(loss='hinge', penalty='l2', max_iter=1000)
+#hinge - loss function that gives linear SVM
+#l2 -> regularlization term used in model (prevents overfitting)
+sgd.fit(X_train, y_train)
+y_pred7 = sgd.predict(X_test)
+dict1 =  {'Model': 'SGD Classifier', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+#dfppca = pd.DataFrame()
+dfppca = dfppca.append(dict1, ignore_index = True)
+#df_totacc = df_totacc.append(dict4, ignore_index=True)
+dfppca.head()
+
+dfppca
+
+from sklearn.naive_bayes import GaussianNB
+nb = GaussianNB()
+nb.fit(X_train, y_train)
+y_pred1 = nb.predict(X_test)
+dict1 =  {'Model': 'Naive Bayes Classifier', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = dfppca.append(dict1, ignore_index = True)
+dfppca.head()
+
+from sklearn.tree import DecisionTreeRegressor 
+regressor = DecisionTreeRegressor(random_state = 0) 
+regressor.fit(X_train, y_train)
+y_pred1 = regressor.predict(X_test)
+dict1 =  {'Model': 'Decision Tree Regression', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = dfppca.append(dict1, ignore_index = True)
+dfppca.head()
+
+from sklearn.linear_model import LinearRegression
+reg = LinearRegression()
+reg.fit(X_train, y_train)
+y_pred1 = reg.predict(X_test)
+
+np.place(y_pred1, y_pred1>=0.5, 1)
+np.place(y_pred1, y_pred1<0.5, 0)
+#print(pred_bin_lm)
+y_pred1 = y_pred1.astype(int)
+
+dict1 =  {'Model': 'Linear Regression', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = dfppca.append(dict1, ignore_index = True)
+dfppca
+
+from sklearn.svm import SVC 
+svm = SVC(kernel='linear')
+svm.fit(X_train, y_train)
+y_pred1 = svm.predict(X_test)
+
+
+dict1 =  {'Model': 'SVM', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = dfppca.append(dict1, ignore_index = True)
+dfppca
+
+from sklearn.neighbors import KNeighborsClassifier
+neighbors = np.arange(1,100)
+train_accuracy = np.empty(len(neighbors))
+test_accuracy = np.empty(len(neighbors))
+for i, k in enumerate(neighbors):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+  
+    train_accuracy[i] = knn.score(X_train, y_train)
+    test_accuracy[i] = knn.score(X_test, y_test)
+
+x = np.arange(0, 100, 5)
+plt.xticks(x)
+plt.plot(train_accuracy, label='train accuracy')
+plt.plot(test_accuracy, label = 'test accuracy')
+plt.legend()
+plt.grid(axis='both', which='both')
+
+plt.show()
+
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+y_pred1= knn.predict(X_test)
+
+dict1 =  {'Model': 'KNN', 'Accuracy': metrics.accuracy_score(y_test, y_pred1), 'Precision':metrics.precision_score(y_test, y_pred1), 'Recall':metrics.recall_score(y_test, y_pred1)}
+dfppca = dfppca.append(dict1, ignore_index = True)
+dfppca
+
+"""Metrics before Dimension Reductionality
+
+"""
+
+df_totacc
+
+"""Metrics after Dimension Reductionality
+
+"""
+
+dfppca
 
