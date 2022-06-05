@@ -1,4 +1,4 @@
 accountability 
 1. optimize best model and fine tune ✅
 2. build chat bot or other type of interface (android application or web application) ✅
-3. deploy on cloud platform
+3. deploy on cloud platform ✅
