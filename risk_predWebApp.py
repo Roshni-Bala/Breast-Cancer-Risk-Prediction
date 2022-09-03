@@ -30,7 +30,7 @@ if st.button("Submit."):
     if ((df.values == 0).all()):
         st.error("Enter valid details!")
     else:
-        with open('rfc-np10.pkl', 'rb') as f2:
+        with open('stackedmod.pkl', 'rb') as f2:
             rfc = pkl.load(f2)
 
         # sc_d = pca.transform(df)
@@ -48,6 +48,6 @@ with st.expander("Learn More"):
     st.write("2019115083, IT Department, Anna University")
     st.write("Socially Relevant Project - Semester VI")
     st.write(" ")
-    st.write("The purpose of this project is to learn and implement Machine Learning. The best model identified was the Random Forest Classifier.")
+    st.write("The purpose of this project is to learn and implement Machine Learning. The best model identified was the Random Forest Classifier. Stacked Ensemble Classifier used to give an overall accuracy of 97.98% and Precision of 99.31%. ")
     st.write(
         "GitHub Repository: https://github.com/Roshni-Bala/Breast-Cancer-Risk-Prediction")
