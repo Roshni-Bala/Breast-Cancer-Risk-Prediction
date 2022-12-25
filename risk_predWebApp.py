@@ -30,7 +30,7 @@ if st.button("Submit."):
     if ((df.values == 0).all()):
         st.error("Enter valid details!")
     else:
-        with open('stackedmod.pkl', 'rb') as f2:
+        with open('rfc-np10.pkl', 'rb') as f2: #test
             rfc = pkl.load(f2)
 
         # sc_d = pca.transform(df)
